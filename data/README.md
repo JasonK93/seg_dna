@@ -1,6 +1,6 @@
 # Labels for those pic
 
-1 --> ar1-3-2.tif /n
+1 --> ar1-3-2.tif \n
 2 --> ar1-4-3.tif
 3 --> be50-4-1.tif
 4 --> e7kgy-2.tif
