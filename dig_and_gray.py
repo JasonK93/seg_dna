@@ -48,7 +48,7 @@ def process():
 def extract(dilation):
     num_list = []
     os.mkdir('data/step1')
-    for pic_num in range(1,9):
+    for pic_num in range(1,10):
         os.mkdir('data/step1/pic{}'.format(pic_num))
         num = 0
         copy = np.copy(dilation[pic_num])
