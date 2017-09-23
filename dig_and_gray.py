@@ -134,7 +134,7 @@ def extract(dilation):
                                 break
 
             num_list.append(num)
-        return num_list
+    return num_list
 
 
 
