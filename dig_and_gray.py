@@ -10,7 +10,7 @@ logging.basicConfig(
 
 def incise():
     os.mkdir('data/square')
-    for i in range(1,9):
+    for i in range(1,10):
         img_rgb = cv2.imread('data/{}.tif'.format(i))
         img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
         cv2.imwrite('data/square/square_{}.png'.format(i),img_gray[80:592,48:560])
@@ -19,11 +19,11 @@ def incise():
 def process():
     os.mkdir('data/gray')
     dilation_list = []
-    for i in range(1,9):
+    for i in range(1,10):
         kernel_2 = np.ones((2, 2), np.uint8)
 
         # high means bright
-        img_rgb = cv2.imread('square_{}.png'.format(i))
+        img_rgb = cv2.imread('data/square/square_{}.png'.format(i))
         img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
 
         HSV = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2HSV)
@@ -139,9 +139,9 @@ def extract(dilation):
 
 
 if __name__ == '__main__':
-    if not os.path.exists('data\square'):
+    if not os.path.exists('data/square'):
         incise()
-    if not os.path.exists('data\gray'):
+    if not os.path.exists('data/gray'):
         dilation = process()
         num = extract(dilation)
         print(num)
