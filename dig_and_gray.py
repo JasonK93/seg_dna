@@ -11,7 +11,7 @@ logging.basicConfig(
 def incise():
     os.mkdir('data/square')
     for i in range(1,9):
-        img_rgb = cv2.imread('data\{}.tif'.format(i))
+        img_rgb = cv2.imread('data/{}.tif'.format(i))
         img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
         cv2.imwrite('data/square/square_{}.png'.format(i),img_gray[80:592,48:560])
 
