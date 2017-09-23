@@ -128,7 +128,7 @@ def extract(dilation):
 
                             except:
                                 logging.info('get {} pic'.format(num+1))
-                                cv2.imwrite('data/step1/pic_1/ex {}.png'.format(num), seg)
+                                cv2.imwrite('data/step1/pic{}/ex {}.png'.format(pic_num,num), seg)
 
                                 num += 1
                                 break
