@@ -34,12 +34,11 @@ def process():
         mask = cv2.inRange(HSV, Lower, Upper)
 
         # erosion and dilation
-        # erosion = cv2.erode(mask, kernel_2, iterations=1)
+        erosion = cv2.erode(mask, kernel_2, iterations=1)
         # erosion = cv2.erode(erosion, kernel_2, iterations=1)
-        # dilation = cv2.dilate(erosion, kernel_2, iterations=1)
+        dilation = cv2.dilate(erosion, kernel_2, iterations=1)
         # dilation = cv2.dilate(dilation, kernel_2, iterations=1)
 
-        dilation = cv2.dilate(mask, kernel_2, iterations=1)
         cv2.imwrite('data/gray/gray{}.png'.format(i), dilation)
         dilation_list.append(dilation)
     return dilation_list

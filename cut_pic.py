@@ -16,7 +16,7 @@ def get_pic():
             try:
                 image = cv2.imread("data/step1/pic{}/ex {}.png".format(pic_num, k))
                 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                if sum(sum(gray)) > 0:    # FIXME: different condition need different threshold
+                if sum(sum(gray)) > 5000:    # FIXME: different condition need different threshold
                     min_X = 255
                     max_X = 0
                     min_Y = 255
@@ -30,6 +30,8 @@ def get_pic():
                                 max_Y = max(max_Y, j)
 
                     cort_img = gray[min_X:max_X, min_Y:max_Y]
+                    # tmp = np.zeros((512,512))
+                    # tmp[256-(min_X+max_X)/2:256+(min_X+max_X)/2, 256-(min_Y+max_Y)/2:256+(min_Y+max_Y)/2] = cort_img
                     cv2.imwrite('data/step2/pic{}/{}.png'.format(pic_num, k), cort_img)
                     logging.info('{} pic have cut'.format(k))
             except:
