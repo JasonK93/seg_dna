@@ -26,3 +26,9 @@ substep ---- 1) smoothy the pic; 2) thinning the graph; 3) calculate the head; 4
 
 expect result ---- error is acceptable
 current status ---- Something is good. Anyway some special conditions need be considered. Such as circle.
+
+#### step 4 find the cross
+
+code ----python find cross.py
+
+demo please see the dir bound_91
