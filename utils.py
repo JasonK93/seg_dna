@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import skimage.io as io
 import numpy as np
 import cv2
-import sys
-sys.setrecursionlimit(1500)
+# import sys
+# sys.setrecursionlimit(1500)
 
 """
 * Return all the neighbours of (x,y)
@@ -226,6 +226,10 @@ def cross_or_not(x,y,img_thin):
                 return False
             else:
                 return True
+        else:
+            return False
+    else:
+        return False
 
 
 """
@@ -527,11 +531,12 @@ def get_summary(stat_list):
 def label(img,point,tag):
     work_list = [point]
     while work_list != []:
+        point = work_list[0]
         if not cross_or_not(point[0],point[1],img):
             img[point[0],point[1]] = tag
             nb, index = neighbours2(point[0],point[1],img)
             for i in range(8):
-                if nb[i] != 0:
+                if nb[i]== 1:
                     work_list.append(index[i])
         else:
             img[point[0], point[1]] = tag
@@ -539,13 +544,14 @@ def label(img,point,tag):
             def get_the_output(nb, index):                      # FIXME: this is the kernel using ML in the future
                 useful_list = []
                 for i in range(8):
-                    if nb[i] != 0:
+                    if nb[i] == 1:
                         useful_list.append(index[i])
                 return useful_list[0]
             tmp = get_the_output(nb,index)
             work_list.append(tmp)
         work_list = work_list[1:]
             # label(img,tmp,tag)
+    return img
 
 
 def find_value_point(img):
@@ -560,20 +566,23 @@ def find_value_point(img):
 * Using label function to get the seperate
 """
 def img_label(img):
-    tag = [0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09]
+    tag = [0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09, 0.10, 0.11, 0.12]
     tag_num = 0
     single_list = []
     while find_value_point(img):
         point = find_value_point(img)
-        label(img,point,tag[tag_num])
+        img = label(img,point,tag[tag_num])
         tag_num += 1
-    for i in tag_num:
+    for i in range(tag_num):
         seg = np.copy(img)
-        seg[seg != tag[tag_num]] = 0
-        seg[seg == tag[tag_num]] = 255
+        seg[seg != tag[i]] = 0
+        seg[seg == tag[i]] = 255
         single_list.append(seg)
     return single_list
 
 
 
-
+def transfe(img):
+    tmp = np.zeros((515,515))
+    tmp[2:514,2:514] = img
+    return tmp
