@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import skimage.io as io
 import numpy as np
 import cv2
-
+import sys
+sys.setrecursionlimit(1500)
 
 """
 * Return all the neighbours of (x,y)
@@ -41,8 +42,7 @@ def neighbours2(x,y,image):
 
     x_1, y_1, x1, y1 = x-1, y-1, x+1, y+1
 
-    return [ img[x_1][y], img[x_1][y1], img[x][y1], img[x1][y1], img[x1][y], img[x1][y_1], img[x][y_1], img[x_1][y_1] ], #  P2,P3,P4,P5P6,P7,P8,P9
-            [    [x_1,y],     [x_1,y1],    [x, y1],  [x1,y1],      [x1,y],      [x1,y_1],     [x,y_1],   [x_1,y_1]  ]
+    return [ img[x_1][y], img[x_1][y1], img[x][y1], img[x1][y1], img[x1][y], img[x1][y_1], img[x][y_1], img[x_1][y_1] ], [[x_1,y],[x_1,y1],[x, y1],[x1,y1],[x1,y],[x1,y_1],[x,y_1],[x_1,y_1]]
 
 
 """
@@ -75,7 +75,7 @@ def cross_or_not(x,y,img_thin):
                   [1, 0, 0, 0, 1, 0, 1, 1, 0],
                   [1, 0, 1, 1, 1, 0, 1, 0, 0]]  # FIXME: not complete
     if img_thin[x, y] == 1:
-        if sum(utils.neighbours(x, y, img_thin)) >= 3:
+        if sum(neighbours(x, y, img_thin)) >= 3:
             if (np.array(img_thin[x - 1:x + 2, y - 1:y + 2]).reshape((1, 9)) == Not_sample[0]).all():  # FIXME: a in b
                 # print(np.array(img_thin[x - 1:x + 2, y - 1:y + 2]).reshape((1,9)))
                 # tt += 1
@@ -525,23 +525,27 @@ def get_summary(stat_list):
 * Returns
 """
 def label(img,point,tag):
-    if not cross_or_not(point[0],point[1],img):
-        img[point[0],point[1]] = tag
-        nb, index = neighbours2(point[0],point[1],img)
-        for i in range(8):
-            if nb[i] != 0:
-                label(img,index[i],tag)
-    else:
-        img[point[0], point[1]] = tag
-        nb, index = neighbours2(point[0], point[1], img)
-        def get_the_output(nb, index):                      # FIXME: this is the kernel using ML in the future
-            useful_list = []
+    work_list = [point]
+    while work_list != []:
+        if not cross_or_not(point[0],point[1],img):
+            img[point[0],point[1]] = tag
+            nb, index = neighbours2(point[0],point[1],img)
             for i in range(8):
                 if nb[i] != 0:
-                    useful_list.append(index[i])
-            return useful_list[0]
-        tmp = get_the_output(nb,index)
-        label(img,tmp,tag)
+                    work_list.append(index[i])
+        else:
+            img[point[0], point[1]] = tag
+            nb, index = neighbours2(point[0], point[1], img)
+            def get_the_output(nb, index):                      # FIXME: this is the kernel using ML in the future
+                useful_list = []
+                for i in range(8):
+                    if nb[i] != 0:
+                        useful_list.append(index[i])
+                return useful_list[0]
+            tmp = get_the_output(nb,index)
+            work_list.append(tmp)
+        work_list = work_list[1:]
+            # label(img,tmp,tag)
 
 
 def find_value_point(img):
@@ -556,11 +560,20 @@ def find_value_point(img):
 * Using label function to get the seperate
 """
 def img_label(img):
-    tag = ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
+    tag = [0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09]
     tag_num = 0
+    single_list = []
     while find_value_point(img):
         point = find_value_point(img)
         label(img,point,tag[tag_num])
         tag_num += 1
-    return img
+    for i in tag_num:
+        seg = np.copy(img)
+        seg[seg != tag[tag_num]] = 0
+        seg[seg == tag[tag_num]] = 255
+        single_list.append(seg)
+    return single_list
+
+
+
 

@@ -5,7 +5,8 @@ import logging
 import os
 import utils
 import matplotlib.pyplot as plt
-
+import sys
+sys.setrecursionlimit(1500)
 # Read img_ gray format
 
 img_path = 'data/8.tif'
@@ -45,6 +46,15 @@ utils.get_summary(stat_list)
 
 
 # label the complex one
+all_single = []
+for i in thinning_image:
+    all_single = all_single + utils.img_label(i)
+
+pic_num =0
+for i in all_single:
+    cv2.imwrite('tmp/{}.png'.format(pic_num),i)
+    pic_num +=1
+    print(pic_num)
 
 
 # print(len(thinning_image))
