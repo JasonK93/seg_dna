@@ -26,6 +26,8 @@ for i in partitions:
     if utils.threshold(i,100):
         clean_img.append(i)
 
+# TODO: this part can add one incise the dna
+
 # get the thinning img
 thinning_image = []
 for i in clean_img:
@@ -42,7 +44,7 @@ for i in thinning_image:
 utils.get_summary(stat_list)
 
 
-# get the single one from all
+# label the complex one
 
 
 # print(len(thinning_image))

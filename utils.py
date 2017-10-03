@@ -21,10 +21,28 @@ def neighbours(x,y,image):
 
     x_1, y_1, x1, y1 = x-1, y-1, x+1, y+1
 
-    return [ img[x_1][y], img[x_1][y1], img[x][y1], img[x1][y1],     # P2,P3,P4,P5
+    return [ img[x_1][y], img[x_1][y1], img[x][y1], img[x1][y1], img[x1][y], img[x1][y_1], img[x][y_1], img[x_1][y_1] ] #  P2,P3,P4,P5P6,P7,P8,P9
 
-                img[x1][y], img[x1][y_1], img[x][y_1], img[x_1][y_1] ]    # P6,P7,P8,P9
 
+"""
+* Return all the neighbours of (x,y)
+* Expect:
+    -- x = the coordinate x
+    -- y = the coordinate y
+    -- image = the image where this point from
+* Returns:
+    -- [] a list concluding 8 points
+"""
+def neighbours2(x,y,image):
+
+    "Return 8-neighbours of image point P1(x,y), in a clockwise order"
+
+    img = image
+
+    x_1, y_1, x1, y1 = x-1, y-1, x+1, y+1
+
+    return [ img[x_1][y], img[x_1][y1], img[x][y1], img[x1][y1], img[x1][y], img[x1][y_1], img[x][y_1], img[x_1][y_1] ], #  P2,P3,P4,P5P6,P7,P8,P9
+            [    [x_1,y],     [x_1,y1],    [x, y1],  [x1,y1],      [x1,y],      [x1,y_1],     [x,y_1],   [x_1,y_1]  ]
 
 
 """
@@ -500,3 +518,49 @@ def get_summary(stat_list):
             list_line.append(line_avg)
     plt.hist(list_line)
     plt.show()
+
+"""
+* Label one line
+* Expects:
+* Returns
+"""
+def label(img,point,tag):
+    if not cross_or_not(point[0],point[1],img):
+        img[point[0],point[1]] = tag
+        nb, index = neighbours2(point[0],point[1],img)
+        for i in range(8):
+            if nb[i] != 0:
+                label(img,index[i],tag)
+    else:
+        img[point[0], point[1]] = tag
+        nb, index = neighbours2(point[0], point[1], img)
+        def get_the_output(nb, index):                      # FIXME: this is the kernel using ML in the future
+            useful_list = []
+            for i in range(8):
+                if nb[i] != 0:
+                    useful_list.append(index[i])
+            return useful_list[0]
+        tmp = get_the_output(nb,index)
+        label(img,tmp,tag)
+
+
+def find_value_point(img):
+    for i in range(512):
+        for j in range(512):
+            if img[i,j] == 1:
+                return [i,j]
+    return False
+
+
+"""
+* Using label function to get the seperate
+"""
+def img_label(img):
+    tag = ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
+    tag_num = 0
+    while find_value_point(img):
+        point = find_value_point(img)
+        label(img,point,tag[tag_num])
+        tag_num += 1
+    return img
+
